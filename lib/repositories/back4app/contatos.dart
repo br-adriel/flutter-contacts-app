@@ -23,4 +23,8 @@ class ContatosB4ARepository {
   Future<void> adicionar(ContatoModel model) async {
     await _dio.post("/classes/Contato", data: model.toJsonData());
   }
+
+  Future<void> remover(String id) async {
+    await _dio.delete("/classes/Contato/$id");
+  }
 }
