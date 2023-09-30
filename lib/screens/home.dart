@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/screens/form_contato.dart';
 import 'package:flutter_contacts/widgets/lista_contatos.dart';
 import 'package:flutter_contacts/widgets/teclado_numerico.dart';
 
@@ -13,6 +14,17 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController(initialPage: 1);
   int _paginaAtual = 1;
   String _titulo = "Contatos";
+
+  _tapFloatingButton() {
+    if (_paginaAtual == 0) {
+      return;
+    }
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        return const FormContatoScreen();
+      },
+    ));
+  }
 
   _atualizarConteudo(int value) {
     if (mounted) {
@@ -32,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(_titulo)),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: _tapFloatingButton,
         tooltip: _paginaAtual == 0 ? "Telefonar" : "Adicionar contato",
         child: Icon(_paginaAtual == 0 ? Icons.phone : Icons.add),
       ),
