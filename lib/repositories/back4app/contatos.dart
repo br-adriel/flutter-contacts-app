@@ -19,4 +19,8 @@ class ContatosB4ARepository {
     var contatos = ContatosListResponse.fromJson(res.data).contatos;
     return contatos;
   }
+
+  Future<void> adicionar(ContatoModel model) async {
+    await _dio.post("/classes/Contato", data: model.toJsonData());
+  }
 }
