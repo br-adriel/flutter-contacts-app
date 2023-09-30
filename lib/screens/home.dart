@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/widgets/lista_contatos.dart';
+import 'package:flutter_contacts/widgets/teclado_numerico.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -48,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: PageView(
         onPageChanged: _atualizarConteudo,
         controller: _pageController,
-        children: [Container(), ListaDeContatos()],
+        children: [const TecladoNumerico(), ListaDeContatos()],
       ),
     );
   }
