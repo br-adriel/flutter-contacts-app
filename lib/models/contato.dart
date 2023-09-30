@@ -1,22 +1,20 @@
 class ContatosListResponse {
-  List<ContatoModel>? contatos;
+  List<ContatoModel> contatos = [];
 
-  ContatosListResponse({this.contatos});
+  ContatosListResponse({this.contatos = const []});
 
   ContatosListResponse.fromJson(Map<String, dynamic> json) {
     if (json['results'] != null) {
       contatos = <ContatoModel>[];
       json['results'].forEach((v) {
-        contatos!.add(ContatoModel.fromJson(v));
+        contatos.add(ContatoModel.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (contatos != null) {
-      data['results'] = contatos!.map((v) => v.toJson()).toList();
-    }
+    data['results'] = contatos.map((v) => v.toJson()).toList();
     return data;
   }
 }
