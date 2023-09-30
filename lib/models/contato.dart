@@ -62,4 +62,14 @@ class ContatoModel {
     data['emails'] = emails;
     return data;
   }
+
+  Map<String, dynamic> toJsonData() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['nome'] = nome;
+    data['sobrenome'] = sobrenome;
+    data['imagem'] = imagem;
+    data['telefones'] = telefones;
+    data['emails'] = emails;
+    return data;
+  }
 }
