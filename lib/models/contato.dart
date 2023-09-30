@@ -28,6 +28,8 @@ class ContatoModel {
   String nome = "";
   String sobrenome = "";
   String imagem = "";
+  List<String> telefones = [];
+  List<String> emails = [];
 
   ContatoModel(
       {this.objectId = "",
@@ -35,7 +37,9 @@ class ContatoModel {
       this.updatedAt = "",
       this.nome = "",
       this.sobrenome = "",
-      this.imagem = ""});
+      this.imagem = "",
+      this.telefones = const [],
+      this.emails = const []});
 
   ContatoModel.fromJson(Map<String, dynamic> json) {
     objectId = json['objectId'];
@@ -44,6 +48,8 @@ class ContatoModel {
     nome = json['nome'];
     sobrenome = json['sobrenome'];
     imagem = json['imagem'];
+    telefones = json['telefones'].cast<String>();
+    emails = json['emails'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -54,6 +60,8 @@ class ContatoModel {
     data['nome'] = nome;
     data['sobrenome'] = sobrenome;
     data['imagem'] = imagem;
+    data['telefones'] = telefones;
+    data['emails'] = emails;
     return data;
   }
 }
