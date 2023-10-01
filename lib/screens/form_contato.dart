@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/utils/input_generator.dart';
 import 'package:flutter_contacts/widgets/imagem_perfil_input.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -18,58 +19,29 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
   final TextEditingController _sobrenome = TextEditingController(text: "");
   final TextEditingController _telefonePadrao = TextEditingController(text: "");
   final TextEditingController _emailPadrao = TextEditingController(text: "");
-  final List<TextEditingController> _telefones = [];
-  final List<TextEditingController> _emails = [];
-
-  _adicionarCampo(List<TextEditingController> controllerList) {
-    controllerList.add(TextEditingController(text: ""));
-    setState(() {});
-  }
+  final InputGenerator _telefones = InputGenerator(
+    countStart: 2,
+    inputType: TextInputType.phone,
+    label: "Telefone",
+  );
+  final InputGenerator _emails = InputGenerator(
+    countStart: 2,
+    inputType: TextInputType.emailAddress,
+    label: "Email",
+  );
 
   _adicionarCampoTelefone() {
-    _adicionarCampo(_telefones);
+    _telefones.adicionarCampo();
+    setState(() {});
   }
 
   _adicionarCampoEmail() {
-    _adicionarCampo(_emails);
-  }
-
-  _removerCampo(List<TextEditingController> controllerList, int index) {
-    controllerList.removeAt(index);
+    _emails.adicionarCampo();
     setState(() {});
   }
 
-  _gerarCampos(List<TextEditingController> controllers, String label,
-      TextInputType tipoInput) {
-    return controllers.asMap().entries.map((entry) {
-      return Row(
-        children: [
-          Flexible(
-            child: TextField(
-              decoration: InputDecoration(labelText: "$label ${entry.key + 2}"),
-              textInputAction: TextInputAction.next,
-              keyboardType: tipoInput,
-              controller: entry.value,
-            ),
-          ),
-          IconButton(
-            onPressed: () => _removerCampo(controllers, entry.key),
-            icon: const Icon(
-              Icons.close,
-              color: Colors.red,
-            ),
-          )
-        ],
-      );
-    }).toList();
-  }
-
-  _gerarEmailsExtra() {
-    return _gerarCampos(_emails, "Email", TextInputType.emailAddress);
-  }
-
-  _gerarTelefonesExtra() {
-    return _gerarCampos(_telefones, "Telefone", TextInputType.phone);
+  _aposRemoverCampo() {
+    setState(() {});
   }
 
   @override
@@ -115,7 +87,7 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
               )
             ],
           ),
-          ..._gerarTelefonesExtra(),
+          ..._telefones.gerarCampos(afterRemove: _aposRemoverCampo),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -134,7 +106,8 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
               )
             ],
           ),
-          ..._gerarEmailsExtra(),
+          ..._emails.gerarCampos(afterRemove: _aposRemoverCampo),
+          const SizedBox(height: 64)
         ],
       ),
     );
