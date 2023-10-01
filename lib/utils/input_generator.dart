@@ -45,5 +45,8 @@ class InputGenerator {
     }).toList();
   }
 
-  get controllers => _controllers;
+  List<TextEditingController> get controllers => _controllers;
+
+  List<String> get controllersValues =>
+      _controllers.map((c) => c.text).toList();
 }
