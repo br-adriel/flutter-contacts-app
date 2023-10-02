@@ -48,5 +48,5 @@ class InputGenerator {
   List<TextEditingController> get controllers => _controllers;
 
   List<String> get controllersValues =>
-      _controllers.map((c) => c.text).toList();
+      _controllers.where((c) => c.text.isNotEmpty).map((c) => c.text).toList();
 }

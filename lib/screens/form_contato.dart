@@ -37,11 +37,13 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
   bool _loading = false;
 
   _salvar() async {
-    List<String> emails = [_emailPadrao.text, ..._emails.controllersValues];
-    List<String> telefones = [
-      _telefonePadrao.text,
-      ..._telefones.controllersValues
-    ];
+    List<String> emails = _emailPadrao.text.isEmpty ? [] : [_emailPadrao.text];
+    emails.addAll(_emails.controllersValues);
+
+    List<String> telefones =
+        _telefonePadrao.text.isEmpty ? [] : [_telefonePadrao.text];
+    telefones.addAll(_telefones.controllersValues);
+
     var contato = ContatoModel(
       nome: _nome.text,
       emails: emails,
