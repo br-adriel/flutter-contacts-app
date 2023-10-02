@@ -7,12 +7,15 @@ class InputGenerator {
   int countStart;
   TextInputType inputType;
   List<TextInputFormatter> formatters;
+  String? Function(String?)? validator;
 
-  InputGenerator(
-      {this.label = "",
-      this.countStart = 1,
-      this.inputType = TextInputType.text,
-      this.formatters = const []});
+  InputGenerator({
+    this.label = "",
+    this.countStart = 1,
+    this.inputType = TextInputType.text,
+    this.formatters = const [],
+    this.validator,
+  });
 
   adicionarCampo() {
     _controllers.add(TextEditingController(text: ""));
@@ -23,7 +26,8 @@ class InputGenerator {
       return Row(
         children: [
           Flexible(
-            child: TextField(
+            child: TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               decoration: InputDecoration(
                 labelText: "$label ${entry.key + countStart}",
               ),
@@ -31,6 +35,7 @@ class InputGenerator {
               textInputAction: TextInputAction.next,
               keyboardType: inputType,
               controller: entry.value,
+              validator: validator,
             ),
           ),
           IconButton(
