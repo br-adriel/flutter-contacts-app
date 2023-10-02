@@ -1,4 +1,6 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/repositories/back4app/contatos.dart';
 import 'package:flutter_contacts/utils/input_generator.dart';
@@ -27,6 +29,10 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
     countStart: 2,
     inputType: TextInputType.phone,
     label: "Telefone",
+    formatters: [
+      FilteringTextInputFormatter.digitsOnly,
+      TelefoneInputFormatter()
+    ],
   );
   final _emails = InputGenerator(
     countStart: 2,
@@ -106,6 +112,10 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
                   children: [
                     Flexible(
                       child: TextField(
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          TelefoneInputFormatter()
+                        ],
                         decoration:
                             const InputDecoration(labelText: "Telefone 1"),
                         textInputAction: TextInputAction.next,

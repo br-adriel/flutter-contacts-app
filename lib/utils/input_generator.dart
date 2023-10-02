@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InputGenerator {
   final List<TextEditingController> _controllers = [];
   String label;
   int countStart;
   TextInputType inputType;
+  List<TextInputFormatter> formatters;
 
-  InputGenerator({
-    this.label = "",
-    this.countStart = 1,
-    this.inputType = TextInputType.text,
-  });
+  InputGenerator(
+      {this.label = "",
+      this.countStart = 1,
+      this.inputType = TextInputType.text,
+      this.formatters = const []});
 
   adicionarCampo() {
     _controllers.add(TextEditingController(text: ""));
@@ -25,6 +27,7 @@ class InputGenerator {
               decoration: InputDecoration(
                 labelText: "$label ${entry.key + countStart}",
               ),
+              inputFormatters: formatters,
               textInputAction: TextInputAction.next,
               keyboardType: inputType,
               controller: entry.value,
