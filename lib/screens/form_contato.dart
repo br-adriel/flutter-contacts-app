@@ -6,6 +6,7 @@ import 'package:flutter_contacts/repositories/back4app/contatos.dart';
 import 'package:flutter_contacts/utils/input_generator.dart';
 import 'package:flutter_contacts/widgets/imagem_perfil_input.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:validatorless/validatorless.dart';
 
 class FormContatoScreen extends StatefulWidget {
   final bool atualizar;
@@ -38,6 +39,7 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
     countStart: 2,
     inputType: TextInputType.emailAddress,
     label: "Email",
+    validator: Validatorless.email("Digite um email válido"),
   );
 
   bool _loading = false;
@@ -97,21 +99,35 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
               padding: const EdgeInsets.all(16),
               children: [
                 ImagemDePerfilInput(_imagem),
-                TextField(
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: const InputDecoration(labelText: "Nome"),
                   textInputAction: TextInputAction.next,
                   controller: _nome,
+                  validator: Validatorless.multiple([
+                    Validatorless.required("Preencha o campo nome"),
+                    Validatorless.min(
+                      2,
+                      "O campo deve ter no mínimo 2 caracteres",
+                    ),
+                  ]),
                 ),
-                TextField(
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: const InputDecoration(labelText: "Sobrenome"),
                   textInputAction: TextInputAction.next,
                   controller: _sobrenome,
+                  validator: Validatorless.min(
+                    2,
+                    "O campo deve ter no mínimo 2 caracteres",
+                  ),
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Flexible(
-                      child: TextField(
+                      child: TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           TelefoneInputFormatter()
@@ -135,11 +151,14 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Flexible(
-                      child: TextField(
+                      child: TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         decoration: const InputDecoration(labelText: "Email 1"),
-                        textInputAction: TextInputAction.done,
+                        textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.emailAddress,
                         controller: _emailPadrao,
+                        validator:
+                            Validatorless.email("Digite um email válido"),
                       ),
                     ),
                     IconButton(
