@@ -52,6 +52,11 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
         _telefonePadrao.text.isEmpty ? [] : [_telefonePadrao.text];
     telefones.addAll(_telefones.controllersValues);
 
+    _nome.text = _nome.text.trim();
+    _sobrenome.text = _nome.text.trim();
+    setState(() {});
+    if (_nome.text.isEmpty) return;
+
     var contato = ContatoModel(
       nome: _nome.text,
       emails: emails,
