@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/repositories/back4app/contatos.dart';
+import 'package:flutter_contacts/screens/contato.dart';
 import 'package:flutter_contacts/screens/home.dart';
 import 'package:flutter_contacts/utils/input_generator.dart';
 import 'package:flutter_contacts/widgets/imagem_perfil_input.dart';
@@ -15,9 +16,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class FormContatoScreen extends StatefulWidget {
-  final bool atualizar;
+  final ContatoModel? contatoInicial;
 
-  const FormContatoScreen({super.key, this.atualizar = false});
+  const FormContatoScreen({super.key, this.contatoInicial});
 
   @override
   State<FormContatoScreen> createState() => _FormContatoScreenState();
@@ -49,7 +50,49 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
     validator: Validatorless.email("Digite um email válido"),
   );
 
+  var contato = ContatoModel();
+
   bool _loading = false;
+
+  _carregarValoresIniciais() {
+    if (widget.contatoInicial != null) {
+      if (widget.contatoInicial?.imagem != null) {
+        _imagem = XFile(widget.contatoInicial!.imagem);
+      }
+      _nome.text = widget.contatoInicial!.nome;
+      _sobrenome.text = widget.contatoInicial!.sobrenome;
+
+      if (widget.contatoInicial!.telefones.isNotEmpty) {
+        _telefonePadrao.text = widget.contatoInicial!.telefones[0];
+
+        if (widget.contatoInicial!.telefones.length > 1) {
+          for (int i = 1; i < widget.contatoInicial!.telefones.length; i++) {
+            _telefones.adicionarCampo();
+            _telefones.controllers[i - 1].text =
+                widget.contatoInicial!.telefones[i];
+          }
+        }
+      }
+
+      if (widget.contatoInicial!.emails.isNotEmpty) {
+        _emailPadrao.text = widget.contatoInicial!.emails[0];
+
+        if (widget.contatoInicial!.emails.length > 1) {
+          for (int i = 1; i < widget.contatoInicial!.emails.length; i++) {
+            _emails.adicionarCampo();
+            _emails.controllers[i - 1].text = widget.contatoInicial!.emails[i];
+          }
+        }
+      }
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarValoresIniciais();
+  }
 
   _abrirSeletorDeFonte() {
     showModalBottomSheet(
@@ -121,7 +164,7 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
     setState(() {});
     if (_nome.text.isEmpty) return;
 
-    var contato = ContatoModel(
+    contato = ContatoModel(
       nome: _nome.text,
       emails: emails,
       imagem: _imagem == null ? "" : _imagem!.path,
@@ -130,7 +173,12 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
     );
     _loading = true;
     setState(() {});
-    await _contatosB4ARepository.adicionar(contato);
+    if (widget.contatoInicial == null) {
+      await _contatosB4ARepository.adicionar(contato);
+    } else {
+      contato.objectId = widget.contatoInicial!.objectId;
+      await _contatosB4ARepository.atualizar(contato);
+    }
     _loading = false;
     setState(() {});
     _mostrarDialogo();
@@ -149,7 +197,10 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
                 Navigator.pop(context);
                 Navigator.pushReplacement(context, MaterialPageRoute(
                   builder: (context) {
-                    return const HomeScreen();
+                    if (widget.contatoInicial == null) {
+                      return const HomeScreen();
+                    }
+                    return ContatoScreen(contato);
                   },
                 ));
               },
@@ -179,7 +230,8 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.atualizar ? "Atualizar" : "Adicionar"} contato"),
+        title: Text(
+            "${widget.contatoInicial != null ? "Atualizar" : "Adicionar"} contato"),
       ),
       floatingActionButton: _loading
           ? null

@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) {
         return const FormContatoScreen();
       },
-    ));
+    )).then((value) => _carregarContatos());
   }
 
   _atualizarConteudo(int value) {
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const TecladoNumerico(),
           _loading
               ? const Center(child: CircularProgressIndicator())
-              : ListaDeContatos(_contatos)
+              : ListaDeContatos(_contatos, onLeave: _carregarContatos)
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/models/contato.dart';
+import 'package:flutter_contacts/screens/form_contato.dart';
 
 class ContatoScreen extends StatelessWidget {
   final ContatoModel _contato;
@@ -17,7 +18,12 @@ class ContatoScreen extends StatelessWidget {
           SliverAppBar(
             actions: [
               IconButton(
-                onPressed: () {},
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return FormContatoScreen(contatoInicial: _contato);
+                  }),
+                ),
                 icon: const Icon(Icons.edit),
                 tooltip: "Editar",
               ),

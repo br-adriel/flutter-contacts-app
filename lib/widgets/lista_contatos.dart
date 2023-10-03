@@ -8,8 +8,9 @@ class ListaDeContatos extends StatelessWidget {
       "&abcdefghijklmnopqrstuvwxyz".toUpperCase().split("");
   late final List<ContatoModel> _contatos;
   final Map<String, List<ContatoModel>> _contatosOrganizados = {};
+  final void Function()? onLeave;
 
-  ListaDeContatos(this._contatos, {super.key}) {
+  ListaDeContatos(this._contatos, {super.key, this.onLeave}) {
     for (int i = _alfabeto.length - 1; i > 0; i--) {
       List<ContatoModel> contatosNessaLetra = _contatos
           .where(
@@ -52,7 +53,7 @@ class ListaDeContatos extends StatelessWidget {
                 ),
                 content: Column(
                   children: _contatosOrganizados[letra]!.map((contato) {
-                    return ContatoListTile(contato);
+                    return ContatoListTile(contato, onLeave: onLeave);
                   }).toList(),
                 ),
               );
