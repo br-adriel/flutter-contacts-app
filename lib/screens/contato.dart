@@ -3,11 +3,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/screens/form_contato.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContatoScreen extends StatelessWidget {
   final ContatoModel _contato;
 
   const ContatoScreen(this._contato, {super.key});
+
+  _enviarSMS(String telefone) {
+    String numero = telefone.replaceAll(RegExp(r'\D'), '');
+    launchUrl(Uri.parse("sms:$numero"));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +80,7 @@ class ContatoScreen extends StatelessWidget {
                       ),
                       IconButton(
                         icon: const Icon(Icons.message),
-                        onPressed: () {},
+                        onPressed: () => _enviarSMS(tel),
                         tooltip: "Enviar SMS",
                       ),
                     ],
