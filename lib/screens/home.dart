@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/models/contato.dart';
+import 'package:flutter_contacts/repositories/back4app/contatos.dart';
 import 'package:flutter_contacts/screens/form_contato.dart';
 import 'package:flutter_contacts/widgets/lista_contatos.dart';
 import 'package:flutter_contacts/widgets/teclado_numerico.dart';
@@ -14,6 +16,17 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController(initialPage: 1);
   int _paginaAtual = 1;
   String _titulo = "Contatos";
+  final ContatosB4ARepository _repository = ContatosB4ARepository();
+  late List<ContatoModel> _contatos;
+  bool _loading = false;
+
+  _carregarContatos() async {
+    _loading = true;
+    setState(() {});
+    _contatos = await _repository.listar();
+    _loading = false;
+    setState(() {});
+  }
 
   _tapFloatingButton() {
     if (_paginaAtual == 0) {
@@ -30,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (mounted) {
       _paginaAtual = value;
       _titulo = value == 0 ? 'Telefone' : 'Contatos';
+      if (value == 1 && _contatos.isEmpty) _carregarContatos();
       _pageController.animateToPage(
         value,
         duration: const Duration(milliseconds: 250),
@@ -37,6 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       setState(() {});
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarContatos();
   }
 
   @override
@@ -61,7 +81,12 @@ class _HomeScreenState extends State<HomeScreen> {
       body: PageView(
         onPageChanged: _atualizarConteudo,
         controller: _pageController,
-        children: [const TecladoNumerico(), ListaDeContatos()],
+        children: [
+          const TecladoNumerico(),
+          _loading
+              ? const Center(child: CircularProgressIndicator())
+              : ListaDeContatos(_contatos)
+        ],
       ),
     );
   }
