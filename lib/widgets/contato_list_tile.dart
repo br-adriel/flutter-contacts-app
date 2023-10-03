@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/models/contato.dart';
+import 'package:flutter_contacts/screens/contato.dart';
 
 class ContatoListTile extends StatelessWidget {
   final ContatoModel _contato;
@@ -11,7 +12,13 @@ class ContatoListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return ContatoScreen(_contato);
+          },
+        ));
+      },
       child: ListTile(
         leading: CircleAvatar(
           foregroundImage: _contato.imagem.isEmpty
