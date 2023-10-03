@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/repositories/back4app/contatos.dart';
+import 'package:flutter_contacts/screens/home.dart';
 import 'package:flutter_contacts/utils/input_generator.dart';
 import 'package:flutter_contacts/widgets/imagem_perfil_input.dart';
 import 'package:gallery_saver_updated/gallery_saver.dart';
@@ -116,7 +117,7 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
     telefones.addAll(_telefones.controllersValues);
 
     _nome.text = _nome.text.trim();
-    _sobrenome.text = _nome.text.trim();
+    _sobrenome.text = _sobrenome.text.trim();
     setState(() {});
     if (_nome.text.isEmpty) return;
 
@@ -146,6 +147,11 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pop(context);
+                Navigator.pushReplacement(context, MaterialPageRoute(
+                  builder: (context) {
+                    return const HomeScreen();
+                  },
+                ));
               },
               child: const Text("Ok"),
             ),
