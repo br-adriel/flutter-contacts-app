@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +8,10 @@ import 'package:flutter_contacts/repositories/back4app/contatos.dart';
 import 'package:flutter_contacts/screens/home.dart';
 import 'package:flutter_contacts/utils/input_generator.dart';
 import 'package:flutter_contacts/widgets/imagem_perfil_input.dart';
+import 'package:gallery_saver_updated/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class FormContatoScreen extends StatefulWidget {
@@ -20,6 +25,7 @@ class FormContatoScreen extends StatefulWidget {
 
 class _FormContatoScreenState extends State<FormContatoScreen> {
   XFile? _imagem;
+  final ImagePicker _imagePicker = ImagePicker();
 
   final _contatosB4ARepository = ContatosB4ARepository();
 
@@ -44,6 +50,63 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
   );
 
   bool _loading = false;
+
+  _abrirSeletorDeFonte() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Wrap(
+          children: [
+            ListTile(
+              onTap: () {
+                _selecionarImagem(ImageSource.camera);
+                Navigator.pop(context);
+              },
+              leading: const Icon(Icons.camera_alt),
+              title: const Text("Câmera"),
+            ),
+            ListTile(
+              onTap: () {
+                _selecionarImagem(ImageSource.gallery);
+                Navigator.pop(context);
+              },
+              leading: const Icon(Icons.photo),
+              title: const Text("Galeria"),
+            ),
+            ListTile(
+              onTap: () {
+                _imagem = null;
+                setState(() {});
+                Navigator.pop(context);
+              },
+              leading: const Icon(Icons.image_not_supported),
+              title: const Text("Remover imagem"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _selecionarImagem(ImageSource fonte) async {
+    _imagem = await _imagePicker.pickImage(source: fonte);
+    if (_imagem != null) {
+      String path = (await getApplicationDocumentsDirectory()).path;
+      String nome = p.basename(_imagem!.path);
+      await _imagem!.saveTo("$path/$nome");
+      if (fonte == ImageSource.camera) {
+        await GallerySaver.saveImage(_imagem!.path);
+      }
+      setState(() {});
+    }
+  }
+
+  ImageProvider _imagemSelecionada() {
+    if (_imagem == null) {
+      return const AssetImage("assets/img/profile.jpg");
+    }
+    return FileImage(File(_imagem!.path));
+  }
 
   _salvar() async {
     List<String> emails = _emailPadrao.text.isEmpty ? [] : [_emailPadrao.text];
@@ -128,7 +191,10 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                ImagemDePerfilInput(_imagem),
+                ImagemDePerfilInput(
+                  onImageSelect: _abrirSeletorDeFonte,
+                  selectedImage: _imagemSelecionada,
+                ),
                 TextFormField(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: const InputDecoration(labelText: "Nome"),
