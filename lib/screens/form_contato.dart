@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/repositories/back4app/contatos.dart';
-import 'package:flutter_contacts/screens/home.dart';
 import 'package:flutter_contacts/utils/input_generator.dart';
 import 'package:flutter_contacts/widgets/imagem_perfil_input.dart';
 import 'package:gallery_saver_updated/gallery_saver.dart';
@@ -145,11 +144,8 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(
-                  builder: (context) {
-                    return const HomeScreen();
-                  },
-                ));
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
               child: const Text("Ok"),
             ),
