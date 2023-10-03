@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/repositories/back4app/contatos.dart';
+import 'package:flutter_contacts/screens/home.dart';
 import 'package:flutter_contacts/utils/input_generator.dart';
 import 'package:flutter_contacts/widgets/imagem_perfil_input.dart';
 import 'package:image_picker/image_picker.dart';
@@ -69,6 +70,30 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
     await _contatosB4ARepository.adicionar(contato);
     _loading = false;
     setState(() {});
+    _mostrarDialogo();
+  }
+
+  _mostrarDialogo() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Contato salvo"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(
+                  builder: (context) {
+                    return const HomeScreen();
+                  },
+                ));
+              },
+              child: const Text("Ok"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   _adicionarCampoTelefone() {
