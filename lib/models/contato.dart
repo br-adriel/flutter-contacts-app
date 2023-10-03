@@ -72,4 +72,6 @@ class ContatoModel {
     data['emails'] = emails;
     return data;
   }
+
+  String get nomeCompleto => "$nome $sobrenome";
 }
