@@ -15,6 +15,10 @@ class ContatoScreen extends StatelessWidget {
     launchUrl(Uri.parse("sms:$numero"));
   }
 
+  _enviarEmail(String email) {
+    launchUrl(Uri.parse("mailto:${email.trim()}"));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +105,7 @@ class ContatoScreen extends StatelessWidget {
                   title: Text(email),
                   trailing: IconButton(
                     icon: const Icon(Icons.email),
-                    onPressed: () {},
+                    onPressed: () => _enviarEmail(email),
                     tooltip: "Escrever email",
                   ),
                 );
