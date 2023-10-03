@@ -31,7 +31,7 @@ class ListaDeContatos extends StatelessWidget {
     List<String> letrasComContato = _contatosOrganizados.keys.toList();
     letrasComContato.sort((a, b) => a.compareTo(b));
     return letrasComContato.isEmpty
-        ? Center(
+        ? const Center(
             child: Padding(
                 padding: EdgeInsets.all(16), child: Text("Nenhum contato")),
           )
