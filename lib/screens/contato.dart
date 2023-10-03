@@ -19,10 +19,12 @@ class ContatoScreen extends StatelessWidget {
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.edit),
+                tooltip: "Editar",
               ),
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.delete),
+                tooltip: "Apagar",
               )
             ],
             expandedHeight: MediaQuery.of(context).size.width,
