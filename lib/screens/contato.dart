@@ -4,21 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/repositories/back4app/contatos.dart';
 import 'package:flutter_contacts/screens/form_contato.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_contacts/utils/contact_actions.dart';
 
 class ContatoScreen extends StatelessWidget {
   final ContatoModel _contato;
 
   const ContatoScreen(this._contato, {super.key});
-
-  _enviarSMS(String telefone) {
-    String numero = telefone.replaceAll(RegExp(r'\D'), '');
-    launchUrl(Uri.parse("sms:$numero"));
-  }
-
-  _enviarEmail(String email) {
-    launchUrl(Uri.parse("mailto:${email.trim()}"));
-  }
 
   _apagar(BuildContext context) {
     showDialog(
@@ -111,12 +102,12 @@ class ContatoScreen extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.phone),
-                        onPressed: () {},
+                        onPressed: () => ContactAction.telefonar(tel),
                         tooltip: "Ligar",
                       ),
                       IconButton(
                         icon: const Icon(Icons.message),
-                        onPressed: () => _enviarSMS(tel),
+                        onPressed: () => ContactAction.enviarSMS(tel),
                         tooltip: "Enviar SMS",
                       ),
                     ],
@@ -137,7 +128,7 @@ class ContatoScreen extends StatelessWidget {
                   title: Text(email),
                   trailing: IconButton(
                     icon: const Icon(Icons.email),
-                    onPressed: () => _enviarEmail(email),
+                    onPressed: () => ContactAction.enviarEmail(email),
                     tooltip: "Escrever email",
                   ),
                 );

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/screens/contato.dart';
+import 'package:flutter_contacts/utils/contact_actions.dart';
 
 class ContatoListTile extends StatelessWidget {
   final ContatoModel _contato;
@@ -26,10 +27,14 @@ class ContatoListTile extends StatelessWidget {
               : FileImage(File(_contato.imagem)) as ImageProvider,
         ),
         title: Text("${_contato.nome} ${_contato.sobrenome}"),
-        trailing: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.phone),
-        ),
+        trailing: _contato.telefones.isNotEmpty
+            ? IconButton(
+                onPressed: () {
+                  ContactAction.telefonar(_contato.telefones[0]);
+                },
+                icon: const Icon(Icons.phone),
+              )
+            : null,
         subtitle:
             Text(_contato.telefones.isNotEmpty ? _contato.telefones[0] : ""),
       ),
