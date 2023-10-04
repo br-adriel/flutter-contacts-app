@@ -55,7 +55,7 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
 
   _carregarValoresIniciais() {
     if (widget.contatoInicial != null) {
-      if (widget.contatoInicial?.imagem != null) {
+      if (widget.contatoInicial!.imagem.isNotEmpty) {
         _imagem = XFile(widget.contatoInicial!.imagem);
       }
       _nome.text = widget.contatoInicial!.nome;
