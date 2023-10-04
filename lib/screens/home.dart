@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/repositories/back4app/contatos.dart';
 import 'package:flutter_contacts/screens/form_contato.dart';
-import 'package:flutter_contacts/widgets/lista_contatos.dart';
-import 'package:flutter_contacts/widgets/teclado_numerico.dart';
+import 'package:flutter_contacts/widgets/contato_list_tile.dart';
+import 'package:sticky_headers/sticky_headers/widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,44 +13,43 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final PageController _pageController = PageController(initialPage: 1);
-  int _paginaAtual = 1;
-  String _titulo = "Contatos";
   final ContatosB4ARepository _repository = ContatosB4ARepository();
   late List<ContatoModel> _contatos;
   bool _loading = false;
+  final List<String> _alfabeto =
+      "&abcdefghijklmnopqrstuvwxyz".toUpperCase().split("");
+  final Map<String, List<ContatoModel>> _contatosOrganizados = {};
 
   _carregarContatos() async {
     _loading = true;
     setState(() {});
     _contatos = await _repository.listar();
+
+    for (int i = _alfabeto.length - 1; i > 0; i--) {
+      List<ContatoModel> contatosNessaLetra = _contatos
+          .where(
+              (contato) => contato.nome.toUpperCase().startsWith(_alfabeto[i]))
+          .toList();
+      if (contatosNessaLetra.isNotEmpty) {
+        _contatosOrganizados[_alfabeto[i]] = contatosNessaLetra;
+        _contatos.removeWhere(
+            (contato) => contato.nome.toUpperCase().startsWith(_alfabeto[i]));
+      }
+    }
+    if (_contatos.isNotEmpty) {
+      _contatosOrganizados[_alfabeto[0]] = _contatos.map((e) => e).toList();
+    }
+
     _loading = false;
     setState(() {});
   }
 
   _tapFloatingButton() {
-    if (_paginaAtual == 0) {
-      return;
-    }
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
         return const FormContatoScreen();
       },
-    )).then((value) => _carregarContatos());
-  }
-
-  _atualizarConteudo(int value) {
-    if (mounted) {
-      _paginaAtual = value;
-      _titulo = value == 0 ? 'Telefone' : 'Contatos';
-      if (value == 1 && _contatos.isEmpty) _carregarContatos();
-      _pageController.animateToPage(
-        value,
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.linear,
-      );
-      setState(() {});
-    }
+    ));
   }
 
   @override
@@ -61,33 +60,48 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> letrasComContato = _contatosOrganizados.keys.toList();
+    letrasComContato.sort((a, b) => a.compareTo(b));
+
     return Scaffold(
-      appBar: AppBar(title: Text(_titulo)),
+      appBar: AppBar(title: const Text("Contatos")),
       floatingActionButton: FloatingActionButton(
         onPressed: _tapFloatingButton,
-        tooltip: _paginaAtual == 0 ? "Telefonar" : "Adicionar contato",
-        child: Icon(_paginaAtual == 0 ? Icons.phone : Icons.add),
+        tooltip: "Adicionar contato",
+        child: const Icon(Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _paginaAtual,
-        onTap: _atualizarConteudo,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dialpad), label: "Telefone"),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: "Contatos"),
-        ],
-      ),
-      body: PageView(
-        onPageChanged: _atualizarConteudo,
-        controller: _pageController,
-        children: [
-          const TecladoNumerico(),
-          _loading
-              ? const Center(child: CircularProgressIndicator())
-              : ListaDeContatos(_contatos, onLeave: _carregarContatos)
-        ],
-      ),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : letrasComContato.isEmpty
+              ? const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text("Nenhum contato"),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: _contatosOrganizados.keys.length,
+                  itemBuilder: (context, index) {
+                    String letra = letrasComContato.elementAt(index);
+                    return StickyHeader(
+                      header: Container(
+                        width: double.infinity,
+                        color: Colors.blueGrey[50],
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
+                        child: Text(
+                          letra,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      content: Column(
+                        children: _contatosOrganizados[letra]!.map((contato) {
+                          return ContatoListTile(contato);
+                        }).toList(),
+                      ),
+                    );
+                  },
+                ),
     );
   }
 }

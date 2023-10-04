@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/repositories/back4app/contatos.dart';
 import 'package:flutter_contacts/screens/contato.dart';
-import 'package:flutter_contacts/screens/home.dart';
 import 'package:flutter_contacts/utils/input_generator.dart';
 import 'package:flutter_contacts/widgets/imagem_perfil_input.dart';
 import 'package:gallery_saver_updated/gallery_saver.dart';
@@ -189,20 +188,19 @@ class _FormContatoScreenState extends State<FormContatoScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Contato salvo"),
+          title: const Text("Contato salvo!"),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pop(context);
-                Navigator.pushReplacement(context, MaterialPageRoute(
-                  builder: (context) {
-                    if (widget.contatoInicial == null) {
-                      return const HomeScreen();
-                    }
-                    return ContatoScreen(contato);
-                  },
-                ));
+                if (widget.contatoInicial != null) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(
+                    builder: (context) {
+                      return ContatoScreen(contato);
+                    },
+                  ));
+                }
               },
               child: const Text("Ok"),
             ),

@@ -6,9 +6,8 @@ import 'package:flutter_contacts/screens/contato.dart';
 
 class ContatoListTile extends StatelessWidget {
   final ContatoModel _contato;
-  final void Function()? onLeave;
 
-  const ContatoListTile(this._contato, {super.key, this.onLeave});
+  const ContatoListTile(this._contato, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +17,7 @@ class ContatoListTile extends StatelessWidget {
           builder: (context) {
             return ContatoScreen(_contato);
           },
-        )).then((value) {
-          if (onLeave != null) {
-            onLeave!();
-          }
-        });
+        ));
       },
       child: ListTile(
         leading: CircleAvatar(
