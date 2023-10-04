@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/models/contato.dart';
+import 'package:flutter_contacts/repositories/back4app/contatos.dart';
 import 'package:flutter_contacts/screens/form_contato.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,6 +18,37 @@ class ContatoScreen extends StatelessWidget {
 
   _enviarEmail(String email) {
     launchUrl(Uri.parse("mailto:${email.trim()}"));
+  }
+
+  _apagar(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Apagar contato?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancelar"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                ContatosB4ARepository()
+                    .remover(_contato.objectId)
+                    .then((value) {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                });
+              },
+              style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.red),
+              ),
+              child: const Text("Apagar"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -38,7 +70,7 @@ class ContatoScreen extends StatelessWidget {
                 tooltip: "Editar",
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () => _apagar(context),
                 icon: const Icon(Icons.delete),
                 tooltip: "Apagar",
               )
