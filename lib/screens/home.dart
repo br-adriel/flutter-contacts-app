@@ -24,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _loading = true;
     setState(() {});
     _contatos = await _repository.listar();
+    _contatos.sort((a, b) => a.nome.compareTo(b.nome));
 
     for (int i = _alfabeto.length - 1; i > 0; i--) {
       List<ContatoModel> contatosNessaLetra = _contatos
@@ -49,7 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) {
         return const FormContatoScreen();
       },
-    ));
+    )).then((value) {
+      if (mounted) {
+        _carregarContatos();
+      }
+    });
   }
 
   @override
@@ -64,7 +69,16 @@ class _HomeScreenState extends State<HomeScreen> {
     letrasComContato.sort((a, b) => a.compareTo(b));
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Contatos")),
+      appBar: AppBar(
+        title: const Text("Contatos"),
+        actions: [
+          IconButton(
+            onPressed: _carregarContatos,
+            icon: const Icon(Icons.replay),
+            tooltip: "Atualizar",
+          )
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _tapFloatingButton,
         tooltip: "Adicionar contato",
