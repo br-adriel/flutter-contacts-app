@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/repositories/back4app/contatos.dart';
+import 'package:flutter_contacts/screens/developer.dart';
 import 'package:flutter_contacts/screens/form_contato.dart';
 import 'package:flutter_contacts/widgets/contato_list_tile.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
@@ -70,7 +71,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Contatos"),
+        title: InkWell(
+          child: const Text("Contatos"),
+          onLongPress: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const DeveloperScreen(),
+            ),
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: _carregarContatos,
