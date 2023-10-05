@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_contacts/models/contato.dart';
 import 'package:flutter_contacts/repositories/back4app/contatos.dart';
 import 'package:flutter_contacts/screens/form_contato.dart';
+import 'package:flutter_contacts/screens/home.dart';
 import 'package:flutter_contacts/utils/contact_actions.dart';
 
 class ContatoScreen extends StatelessWidget {
@@ -29,6 +30,11 @@ class ContatoScreen extends StatelessWidget {
                     .then((value) {
                   Navigator.pop(context);
                   Navigator.pop(context);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ));
                 });
               },
               style: const ButtonStyle(
