@@ -6,7 +6,7 @@ aprendizado de Flutter oferecida pelo Santander através da plataforma [DIO](htt
 ![Dart](https://img.shields.io/badge/dart-%232566E9.svg?style=for-the-badge&logo=dart&logoColor=white)
 ![Flutter](https://img.shields.io/badge/Flutter-%232566E9.svg?style=for-the-badge&logo=Flutter&logoColor=white)
 
-<!-- ![Ícone e telas do app](./docs/img/capa.jpg) -->
+![Ícone e telas do app](./docs/img/capa.jpg)
 
 ## Funcionalidades
 
